@@ -40,11 +40,29 @@ fn count(grid: &[[bool; WIDTH]; HEIGHT], x: usize, y: usize) -> u8 {
     return count;
 }
 
+fn generation(grid: &[[bool; WIDTH]; HEIGHT]) -> [[bool; WIDTH]; HEIGHT] {
+    let mut new_grid = [[false; WIDTH]; HEIGHT];
+
+    for x in 0..HEIGHT {
+        for y in 0..WIDTH {
+            let count = count(grid, x, y);
+            new_grid[x][y] = match (grid[x][y], count) {
+                (true, 2) | (true, 3) => true,
+                (false, 3) => true,
+                _ => false,
+            };
+        }
+    }
+
+    return new_grid;
+}
+
 fn main() {
-    let grid: [[bool; WIDTH]; HEIGHT] = [[false; WIDTH]; HEIGHT];
+    let mut grid: [[bool; WIDTH]; HEIGHT] = [[false; WIDTH]; HEIGHT];
     let mut buffer: String = String::new();
     
     loop {
         display(&grid, &mut buffer);
+        grid = generation(&grid);
     }
 }
