@@ -16,7 +16,7 @@ impl Cell {
             let dx = x as i8 + directions_array[i].0;
             let dy = y as i8 + directions_array[i].1;
 
-            if dx > 0 && dy > 0 {
+            if dx >= 0 && dy >= 0 {
                 cells_array.push(( 
                     dx as usize,
                     dy as usize
@@ -105,8 +105,10 @@ fn main() {
     let mut grid: [[bool; WIDTH]; HEIGHT] = [[false; WIDTH]; HEIGHT];
     let mut buffer: String = String::new();
 
+    //
     let glider: Cell = Cell::new(14, 14, "glider", &[(1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1)]);
     glider.add_grid(&mut grid);
+    //
 
     loop {
         display(&grid, &mut buffer);
