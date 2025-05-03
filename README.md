@@ -9,6 +9,7 @@
   <a href="https://github.com/guezoloic/GameOfLife"><img alt="GitHub Repo" src="https://img.shields.io/badge/Source-GitHub-181717?logo=github" /></a>
 </p>
 
+![glider](/media/glider.gif)
 
 ## Prerequisites
 
