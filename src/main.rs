@@ -1,5 +1,48 @@
+use std::{time::Duration, thread};
+
 const WIDTH: usize = 30;
 const HEIGHT: usize = 30;
+
+struct Cell {
+    name: &'static str,
+    array: Vec<(usize, usize)>
+}
+
+impl Cell {
+    pub fn new(x: usize, y: usize, name: &'static str, directions_array: &[(i8, i8)]) -> Self {
+        let mut cells_array: Vec<(usize, usize)> = Vec::new();
+
+        for i in 0..directions_array.len() {
+            let dx = x as i8 + directions_array[i].0;
+            let dy = y as i8 + directions_array[i].1;
+
+            if dx > 0 && dy > 0 {
+                cells_array.push(( 
+                    dx as usize,
+                    dy as usize
+                ));
+            }
+        }
+
+        return Cell {name, array: cells_array};
+    }
+
+    pub fn get_array(&self) -> &Vec<(usize, usize)> {
+        return &self.array;
+    }
+
+    pub fn get_name(&self) -> &'static str {
+        return self.name;
+    }
+
+    pub fn add_grid(&self, grid: &mut [[bool; WIDTH]; HEIGHT]) {
+        for (x, y) in &self.array {
+            if *x < WIDTH && *y < HEIGHT {
+                grid[*y][*x] = true;
+            }
+        }
+    }
+}
 
 fn display(grid: &[[bool; WIDTH]; HEIGHT], buffer: &mut String) {
     buffer.clear();
@@ -16,8 +59,7 @@ fn display(grid: &[[bool; WIDTH]; HEIGHT], buffer: &mut String) {
 }
 
 fn count(grid: &[[bool; WIDTH]; HEIGHT], x: usize, y: usize) -> u8 { 
-    
-    // (i, j) coordinate
+
     let near:[(isize, isize); 8] = [
         (-1, -1), (-1, 0), (-1, 1),
          (0, -1),           (0, 1),
@@ -62,16 +104,13 @@ fn generation(grid: &[[bool; WIDTH]; HEIGHT]) -> [[bool; WIDTH]; HEIGHT] {
 fn main() {
     let mut grid: [[bool; WIDTH]; HEIGHT] = [[false; WIDTH]; HEIGHT];
     let mut buffer: String = String::new();
-    
-    // grid[14][13] = true;
-    // grid[15][14] = true;
-    // grid[13][15] = true;
-    // grid[14][15] = true;
-    // grid[15][15] = true;
+
+    let glider: Cell = Cell::new(14, 14, "glider", &[(1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1)]);
+    glider.add_grid(&mut grid);
 
     loop {
         display(&grid, &mut buffer);
         grid = generation(&grid);
-        std::thread::sleep(std::time::Duration::from_millis(500));
+        thread::sleep(Duration::from_millis(500));
     }
 }
